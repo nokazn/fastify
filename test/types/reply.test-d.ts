@@ -46,6 +46,13 @@ const typedHandler: RouteHandler<ReplyPayload> = async (request, reply) => {
 
 const server = fastify()
 server.get('/get', getHandler)
+
+type Handler = [string, string, RouteHandler];
+const handlers: Handler[] = [['get', 'typed', typedHandler]]
+handlers.forEach(([method, path, handler]) => {
+  server[method](path, handler)
+})
+
 server.get('/typed', typedHandler)
 server.get<ReplyPayload>('/get-generic-send', async function handler (request, reply) {
   reply.send({ test: true })
